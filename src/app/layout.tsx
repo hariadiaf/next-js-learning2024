@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 
-import { Provider } from "@/components/ui/provider";
+import MainProvider from "./MainProvider";
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -15,7 +15,7 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning>
       <body>
-        <Provider>{children}</Provider>
+        <MainProvider>{children}</MainProvider>
       </body>
     </html>
   );
