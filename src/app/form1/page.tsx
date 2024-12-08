@@ -5,5 +5,9 @@ export const metadata = {
 };
 
 export default function Form1() {
-  return <Form1Page />;
+  return (
+    <>
+      <Form1Page />
+    </>
+  );
 }
