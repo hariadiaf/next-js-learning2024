@@ -54,10 +54,7 @@ const Form1Page: FC = () => {
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setValues((prev) => ({
-      ...prev,
-      [name]: name === "age" ? Number(value) : value, // Ensure age is a number
-    }));
+    setValues({ ...values, [name]: name === "age" ? Number(value) : value });
   };
 
   const validateForm = (): boolean => {

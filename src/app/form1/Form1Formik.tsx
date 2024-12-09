@@ -1,10 +1,11 @@
 "use client";
 
-import { ChangeEvent, FC, FormEvent, useState } from "react";
+import { ChangeEvent, FC } from "react";
 import { Box, Container, Heading, Input, Stack } from "@chakra-ui/react";
 import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
 import { PasswordInput } from "@/components/ui/password-input";
+import { useFormik } from "formik";
 
 type RegisterFormType = {
   fullName: string;
@@ -27,102 +28,65 @@ type RegisterFormErrorType = {
   confirmPassword: string;
   address?: string;
 };
+
+const InitialFormValues = {
+  fullName: "",
+  username: "",
+  age: "",
+  mobileNumber: "",
+  email: "",
+  password: "",
+  confirmPassword: "",
+  address: "",
+};
 const Form1FormikPage: FC = () => {
-  const [values, setValues] = useState<RegisterFormType>({
-    fullName: "",
-    username: "",
-    age: 0,
-    mobileNumber: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    address: "",
+  const validate = (values: RegisterFormType) => {
+    const errors: Partial<RegisterFormErrorType> = {};
+    if (!values.fullName) {
+      errors.fullName = "Full Name is required.";
+    }
+    if (!values.username) {
+      errors.username = "Username is required.";
+    }
+    if (!values.age || isNaN(Number(values.age)) || values.age <= 0) {
+      errors.age = "Valid Age is required.";
+    }
+    if (!values.mobileNumber) {
+      errors.mobileNumber = "Mobile Number is required.";
+    }
+    if (!values.email || !values.email.includes("@")) {
+      errors.email = "Valid Email is required.";
+    }
+    if (!values.password) {
+      errors.password = "Password is required.";
+    }
+    if (!values.confirmPassword) {
+      errors.confirmPassword = "Confirm Password is required.";
+    }
+    if (values.password !== values.confirmPassword) {
+      errors.confirmPassword = "Passwords do not match.";
+    }
+
+    return errors;
+  };
+
+  const formik = useFormik<RegisterFormType>({
+    initialValues: InitialFormValues as unknown as RegisterFormType,
+    validate,
+    onSubmit: (value) => {
+      console.log("onSubmit : ", value);
+    },
   });
 
-  const [error, setError] = useState<RegisterFormErrorType>({
-    fullName: "",
-    username: "",
-    age: "",
-    mobileNumber: "",
-    email: "",
-    password: "",
-    confirmPassword: "",
-    address: "",
-  });
+  const { values, errors: error, setFieldValue, handleSubmit } = formik;
+  console.log(formik);
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setValues((prev) => ({
-      ...prev,
-      [name]: name === "age" ? Number(value) : value, // Ensure age is a number
-    }));
-  };
-
-  const validateForm = (): boolean => {
-    const errors: RegisterFormErrorType = {
-      fullName: "",
-      username: "",
-      age: "",
-      mobileNumber: "",
-      email: "",
-      password: "",
-      confirmPassword: "",
-      address: "",
-    };
-
-    let isValid = true;
-
-    if (!values.fullName) {
-      errors.fullName = "Full Name is required.";
-      isValid = false;
-    }
-    if (!values.username) {
-      errors.username = "Username is required.";
-      isValid = false;
-    }
-    if (!values.age || isNaN(Number(values.age)) || values.age <= 0) {
-      errors.age = "Valid Age is required.";
-      isValid = false;
-    }
-    if (!values.mobileNumber) {
-      errors.mobileNumber = "Mobile Number is required.";
-      isValid = false;
-    }
-    if (!values.email || !values.email.includes("@")) {
-      errors.email = "Valid Email is required.";
-      isValid = false;
-    }
-    if (!values.password) {
-      errors.password = "Password is required.";
-      isValid = false;
-    }
-    if (values.password !== values.confirmPassword) {
-      errors.confirmPassword = "Passwords do not match.";
-      isValid = false;
-    }
-
-    setError(errors);
-    return isValid;
-  };
-
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (validateForm()) {
-      alert("Form Submitted Successfully!");
-      console.log("Form Values:", values);
-      setError({
-        fullName: "",
-        username: "",
-        age: "",
-        mobileNumber: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-        address: "",
-      });
-    }
+    const _value = name === "age" ? Number(value) : value;
+    setFieldValue(name, _value);
   };
 
   return (
@@ -140,7 +104,6 @@ const Form1FormikPage: FC = () => {
               <Stack direction="column" gap="4">
                 <Field
                   label="Full Name"
-                  required
                   invalid={!!error.fullName}
                   errorText={error.fullName}
                 >
@@ -155,7 +118,6 @@ const Form1FormikPage: FC = () => {
                 </Field>
                 <Field
                   label="Username"
-                  required
                   invalid={!!error.username}
                   errorText={error.username}
                 >
@@ -169,12 +131,7 @@ const Form1FormikPage: FC = () => {
                   />
                 </Field>
 
-                <Field
-                  label="Age"
-                  required
-                  invalid={!!error.age}
-                  errorText={error.age}
-                >
+                <Field label="Age" invalid={!!error.age} errorText={error.age}>
                   <Input
                     placeholder="Age"
                     name="age"
@@ -188,7 +145,6 @@ const Form1FormikPage: FC = () => {
 
                 <Field
                   label="Mobile Number"
-                  required
                   invalid={!!error.mobileNumber}
                   errorText={error.mobileNumber}
                 >
@@ -204,7 +160,6 @@ const Form1FormikPage: FC = () => {
 
                 <Field
                   label="Email"
-                  required
                   invalid={!!error.email}
                   errorText={error.email}
                 >
@@ -220,7 +175,6 @@ const Form1FormikPage: FC = () => {
 
                 <Field
                   label="Password"
-                  required
                   invalid={!!error.password}
                   errorText={error.password}
                 >
@@ -235,7 +189,6 @@ const Form1FormikPage: FC = () => {
 
                 <Field
                   label="Confirm Password"
-                  required
                   invalid={!!error.confirmPassword}
                   errorText={error.confirmPassword}
                 >
