@@ -59,7 +59,7 @@ const validate = (values: RegisterFormType) => {
   return errors;
 };
 
-const Form1FormikPage: FC = () => {
+const Form1Formik2Page: FC = () => {
   console.log("hai");
   return (
     <Container>
@@ -73,7 +73,14 @@ const Form1FormikPage: FC = () => {
               console.log("onSubmit: ", values);
             }}
           >
-            {({ values, errors, touched, handleChange, handleBlur }) => (
+            {({
+              values,
+              errors,
+              touched,
+              handleChange,
+              handleBlur,
+              getFieldProps,
+            }) => (
               <Form>
                 <Stack gap="4">
                   <Heading size="md">Create Account</Heading>
@@ -89,10 +96,11 @@ const Form1FormikPage: FC = () => {
                     >
                       <Input
                         placeholder="Full Name"
-                        name="fullName"
-                        value={values.fullName}
-                        onChange={handleChange}
-                        onBlur={handleBlur}
+                        {...getFieldProps("fullName")}
+                        // name="fullName"
+                        // value={values.fullName}
+                        // onChange={handleChange}
+                        // onBlur={handleBlur}
                         colorPalette="teal"
                         type="text"
                       />
@@ -225,4 +233,4 @@ const Form1FormikPage: FC = () => {
   );
 };
 
-export default Form1FormikPage;
+export default Form1Formik2Page;
