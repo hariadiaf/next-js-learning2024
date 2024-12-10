@@ -9,7 +9,7 @@ import { PasswordInput } from "@/components/ui/password-input";
 type RegisterFormType = {
   fullName: string;
   username: string;
-  age: number;
+  age: number | string;
   mobileNumber: string;
   email: string;
   password: string;
@@ -31,7 +31,7 @@ const Form1Page: FC = () => {
   const [values, setValues] = useState<RegisterFormType>({
     fullName: "",
     username: "",
-    age: 0,
+    age: "",
     mobileNumber: "",
     email: "",
     password: "",
@@ -79,7 +79,7 @@ const Form1Page: FC = () => {
       errors.username = "Username is required.";
       isValid = false;
     }
-    if (!values.age || isNaN(Number(values.age)) || values.age <= 0) {
+    if (!values.age || isNaN(Number(values.age)) || Number(values.age) <= 0) {
       errors.age = "Valid Age is required.";
       isValid = false;
     }

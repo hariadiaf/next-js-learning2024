@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Field } from "@/components/ui/field";
 import { PasswordInput } from "@/components/ui/password-input";
 import { Formik, Form } from "formik";
+import * as Yup from "yup";
 
 type RegisterFormType = {
   fullName: string;
@@ -29,46 +30,43 @@ const InitialFormValues: RegisterFormType = {
   address: "",
 };
 
-const validate = (values: RegisterFormType) => {
-  const errors: Partial<RegisterFormType> = {};
-  if (!values.fullName) {
-    errors.fullName = "Full Name is required.";
+const validationSchema: Yup.ObjectSchema<RegisterFormType> = Yup.object().shape(
+  {
+    fullName: Yup.string().required("Full Name is required."),
+    username: Yup.string().required("Username is required."),
+    age: Yup.number()
+      .typeError("Valid Age is required.")
+      .min(18, "Age must be greater than 17.")
+      .integer("Age must be a whole number.")
+      .required("Age is required."),
+    mobileNumber: Yup.string().required("Mobile Number is required."),
+    email: Yup.string()
+      .email("Email not valid.")
+      .required("Email is required."),
+    password: Yup.string()
+      .required("Password is required")
+      .min(8, "Must be 8 characters or more")
+      .matches(/[a-z]+/, "Must contain lowercase character")
+      .matches(/[A-Z]+/, "Must UPPERCASE character")
+      .matches(/[@$!%*#?&]+/, "Must contain special character")
+      .matches(/\d+/, "Must contain number"), //source: https://stackoverflow.com/questions/67052123/creating-a-strong-password-with-yup-and-formik-with-individual-error-messages
+    confirmPassword: Yup.string()
+      .required("Confirm Password is required")
+      .oneOf([Yup.ref("password")], "Your passwords do not match."), //source: https://stackoverflow.com/questions/61862252/yup-schema-validation-password-and-confirmpassword-doesnt-work
+    address: Yup.string(), // Optional field
   }
-  if (!values.username) {
-    errors.username = "Username is required.";
-  }
-  if (!values.age || isNaN(Number(values.age)) || Number(values.age) <= 0) {
-    errors.age = "Valid Age is required.";
-  }
-  if (!values.mobileNumber) {
-    errors.mobileNumber = "Mobile Number is required.";
-  }
-  if (!values.email || !values.email.includes("@")) {
-    errors.email = "Valid Email is required.";
-  }
-  if (!values.password) {
-    errors.password = "Password is required.";
-  }
-  if (!values.confirmPassword) {
-    errors.confirmPassword = "Confirm Password is required.";
-  }
-  if (values.password !== values.confirmPassword) {
-    errors.confirmPassword = "Passwords do not match.";
-  }
+);
 
-  return errors;
-};
-
-const Form1Formik2Page: FC = () => {
+const Form1Formik2YupPage: FC = () => {
   console.log("hai");
   return (
     <Container>
       <Container py="10">
-        <Heading>Example Form 3 with Formik component </Heading>
+        <Heading>Example Form 1 with Formik component and Yup</Heading>
         <Box padding="4" border="1px solid lightgray" borderRadius="4px" mt="8">
           <Formik
             initialValues={InitialFormValues}
-            validate={validate}
+            validationSchema={validationSchema}
             onSubmit={(values) => {
               console.log("onSubmit: ", values);
             }}
@@ -97,10 +95,6 @@ const Form1Formik2Page: FC = () => {
                       <Input
                         placeholder="Full Name"
                         {...getFieldProps("fullName")}
-                        // name="fullName"
-                        // value={values.fullName}
-                        // onChange={handleChange}
-                        // onBlur={handleBlur}
                         colorPalette="teal"
                         type="text"
                       />
@@ -233,4 +227,4 @@ const Form1Formik2Page: FC = () => {
   );
 };
 
-export default Form1Formik2Page;
+export default Form1Formik2YupPage;

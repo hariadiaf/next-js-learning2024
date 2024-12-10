@@ -92,7 +92,7 @@ const Form1FormikPage: FC = () => {
   return (
     <Container>
       <Container py="10">
-        <Heading>Example Form 1</Heading>
+        <Heading>Example Form 2 with useFormik</Heading>
         <Box padding="4" border="1px solid lightgray" borderRadius="4px" mt="8">
           <form onSubmit={handleSubmit}>
             <Stack gap="4">
