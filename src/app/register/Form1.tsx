@@ -125,7 +125,7 @@ const Form1Page: FC = () => {
   return (
     <Container>
       <Container py="10">
-        <Heading>Example Form 1</Heading>
+        <Heading>Register Form</Heading>
         <Box padding="4" border="1px solid lightgray" borderRadius="4px" mt="8">
           <form onSubmit={handleSubmit}>
             <Stack gap="4">
