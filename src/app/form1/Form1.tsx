@@ -9,7 +9,7 @@ import { PasswordInput } from "@/components/ui/password-input";
 type RegisterFormType = {
   fullName: string;
   username: string;
-  age: number | string;
+  age: number;
   mobileNumber: string;
   email: string;
   password: string;
